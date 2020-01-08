@@ -48,20 +48,6 @@ void blinkLED(int times, int timeBetween, int timeAfter) {
     }
 }
 
-// send data
-bool xmitData(byte* data, int bytes) {
-    int tries = 5;
-    bool success = false;
-    while (tries-- && !success) {
-        // attempt to send it
-        success = radio.write(data, bytes);
-        if (!success)
-            delay(25);
-    }
-    //  digitalWrite(TXLED, HIGH);
-    return success;
-}
-
 void setup()
 {
     Serial.begin(115200);
@@ -70,6 +56,7 @@ void setup()
     Serial.println("init...");
     radio.begin();
     //  radio.setPALevel(RF24_PA_MAX);
+    radio.setRetries(15, 5);
     radio.setChannel(100);
     radio.setDataRate(RF24_1MBPS);
     //  radio.setDataRate(RF24_250KBPS);
@@ -137,7 +124,7 @@ void loop()
         // transmit the change
         radio.stopListening();
         radio.openWritingPipe(addresses[TXADR]);
-        if (!xmitData(&elevatorPosition, sizeof elevatorPosition)) {
+        if (!radio.write(&elevatorPosition, sizeof elevatorPosition, true)) {
             Serial.println("xmit elevator position failed");
         }
         radio.startListening();
