@@ -21,7 +21,7 @@ uint8_t addresses[][6] = { "Node1","Node0" };
 
 const int ACTIVITY_LED = D0;
 const int upRelay = 10;   // SD3 GPIO10
-const int downRelay = 9;  // SD2 GPIO9
+const int downRelay = D3;  // SD2 GPIO9
 // the last time the LED was on
 unsigned long lastLedTime = 0;
 // last time the elevator position was updated
