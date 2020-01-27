@@ -16,12 +16,10 @@ RF24 radio(D4, D8);
 // these must be the same in the relay code
 enum { TXADR = 0, RXADR };
 uint8_t addresses[][6] = { "Node1","Node0" };
-//const uint64_t inPipe = 0xE8E8F0F0E1LL;
-//const uint64_t outPipe = 0xE8E8F0F0E2LL;
 
 const int ACTIVITY_LED = D0;
 const int upRelay = 10;   // SD3 GPIO10
-const int downRelay = D3;  // SD2 GPIO9
+const int downRelay = D3;  // couldn't use SD2 GPIO9 on newer NODEMCU's, it crashes
 // the last time the LED was on
 unsigned long lastLedTime = 0;
 // last time the elevator position was updated
@@ -62,10 +60,10 @@ void setup()
     //  radio.setDataRate(RF24_250KBPS);
     radio.openReadingPipe(1, addresses[RXADR]);
     radio.startListening();
-    pinMode(upRelay, OUTPUT);
     digitalWrite(upRelay, HIGH);
-    pinMode(downRelay, OUTPUT);
+    pinMode(upRelay, OUTPUT);
     digitalWrite(downRelay, HIGH);
+    pinMode(downRelay, OUTPUT);
     pinMode(ACTIVITY_LED, OUTPUT);     // Initialize the LED_BUILTIN pin as an output
     pinMode(elevatorUP, INPUT_PULLUP);
     pinMode(elevatorDOWN, INPUT_PULLUP);
